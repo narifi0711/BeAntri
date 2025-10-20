@@ -1,0 +1,36 @@
+@layer components {
+  .form-inline {
+    @apply flex items-center;
+
+
+    @media (max-width: 639px) { /* Asumsi 'sm' adalah 640px */
+        @apply block;
+    }
+
+    .form-label {
+      @apply mb-0 mr-5 text-right;
+
+
+      @media (max-width: 639px) {
+        @apply mb-2 mr-0 text-left;
+      }
+    }
+    .form-control {
+      @apply flex-1;
+    }
+  }
+}
+
+/* Hapus bagian ini karena sudah dimasukkan di @layer components */
+/*
+.form-inline {
+  @include media-breakpoint-down(sm) {
+    @apply block;
+  }
+  .form-label {
+    @include media-breakpoint-down(sm) {
+      @apply mb-2 mr-0 text-left;
+    }
+  }
+}
+*/
