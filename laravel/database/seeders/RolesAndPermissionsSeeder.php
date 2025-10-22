@@ -30,7 +30,6 @@ class RolesAndPermissionsSeeder extends Seeder
             'edit articles',
             'delete articles',
             'view error logs',
-            // Tambahkan permissions lain sesuai kebutuhan unit Anda
         ];
 
         foreach ($permissions as $permission) {
@@ -39,8 +38,8 @@ class RolesAndPermissionsSeeder extends Seeder
 
         // 2. BUAT ROLES DAN ASSIGN PERMISSIONS
         $superAdminRole = Role::create(['name' => 'super-admin']);
-        $adminRole = Role::create(['name' => 'admin-unit']);
-        $unitUserRole = Role::create(['name' => 'user-unit']);
+        $adminRole = Role::create(['name' => 'admin-instance']);
+        $instanceUserRole = Role::create(['name' => 'user-instance']);
 
         // Assign semua permissions ke super-admin
         $superAdminRole->givePermissionTo(Permission::all());
@@ -49,10 +48,10 @@ class RolesAndPermissionsSeeder extends Seeder
         $adminRole->givePermissionTo(['view dashboard', 'manage users', 'manage roles']);
 
         // Assign permissions ke user biasa
-        $unitUserRole->givePermissionTo(['view dashboard', 'create articles', 'edit articles']);
+        $instanceUserRole->givePermissionTo(['view dashboard', 'create articles', 'edit articles']);
 
         // 3. BUAT USER (CONTOH)
-        // Pastikan Anda telah menambahkan 'unit' di model User dan migration
+        // Pastikan Anda telah menambahkan 'instance' di model User dan migration
 
         // Hapus user yang sudah ada untuk menghindari duplikasi email (opsional)
         // User::where('email', 'superadmin@app.com')->delete();
@@ -60,31 +59,31 @@ class RolesAndPermissionsSeeder extends Seeder
 
         $superAdmin = User::create([
             'name' => 'Super Admin',
-            'email' => 'nasrul.arifin@ecampus.ut.ac.id',
-            'unit' => 'Core Team',
+            'email' => 'superadmin@beantri.com',
+            'instance_id' => null,
             'password' => Hash::make('password'),
             'active' => true,
         ]);
 
         $admin = User::create([
-            'name' => 'Admin Unit',
-            'email' => 'admin.unit@ecampus.ut.ac.id',
-            'unit' => '49',
+            'name' => 'Admin Instance',
+            'email' => 'admin@allora.com',
+            'instance_id' => 1,
             'password' => Hash::make('password'),
             'active' => true,
         ]);
 
         $user = User::create([
-            'name' => 'User Unit',
-            'email' => 'user.unit@ecampus.ut.ac.id',
-            'unit' => '49',
+            'name' => 'User Instance',
+            'email' => 'user@allora.com',
+            'instance_id' => 1,
             'password' => Hash::make('password'),
             'active' => true,
         ]);
 
         // 4. ASSIGN ROLE KE USER
         $superAdmin->assignRole('super-admin');
-        $admin->assignRole('admin-unit');
-        $user->assignRole('user-unit');
+        $admin->assignRole('admin-instance');
+        $user->assignRole('user-instance');
     }
 }
