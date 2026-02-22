@@ -20,7 +20,7 @@ return new class extends Migration
             $table->integer('instance_id')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->integer('active');
+            $table->integer('active')->default(1);
             $table->softDeletes();
             $table->rememberToken();
             $table->timestamps();

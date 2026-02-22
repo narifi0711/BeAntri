@@ -101,6 +101,15 @@ import { min } from "lodash";
                                     <i data-lucide="eye" class="w-4 h-4 mr-1"></i> Detail
                                 </a>`;
                     },
+                    cellClick: function(e, cell) {
+                        // 'cell' di sini sudah merupakan Tabulator Cell Component
+                        const rowData = cell.getData();
+                        const stackTrace = rowData.stack_trace;
+
+                        $("#log-error-modal-content").html(`<pre class="whitespace-pre-wrap break-words">${stackTrace}</pre>`);
+                        const modal = tailwind.Modal.getOrCreateInstance(document.querySelector("#log-error-modal"));
+                        modal.show();
+                    }
                 },
 
                 // For print format
@@ -133,21 +142,6 @@ import { min } from "lodash";
                     nameAttr: "data-lucide",
                 });
             },
-        });
-
-        // Event Delegation for "View Log" button
-        // This is the correct way to handle events for elements created by a formatter.
-        $("#tabulator").on("click", ".btn-view-log", function() {
-            // Find the cell component for the button that was clicked
-            const cell = $(this).closest(".tabulator-cell").data("cell");
-            if (cell) {
-                const rowData = cell.getData();
-                const stackTrace = rowData.stack_trace;
-
-                $("#log-error-modal-content").html(`<pre class="whitespace-pre-wrap break-words">${stackTrace}</pre>`);
-                const modal = tailwind.Modal.getOrCreateInstance(document.querySelector("#log-error-modal"));
-                modal.show();
-            }
         });
 
         // Redraw table onresize
@@ -269,15 +263,15 @@ import { min } from "lodash";
 
                 // For HTML table
                 { title: "NAME", field: "name", hozAlign: "left", minWidth: 200 },
-                { title: "EMAIL", field: "email", hozAlign: "left", minWidth: 200 },
-                { title: "UNIT", field: "unit", hozAlign: "left", minWidth: 150 },
-                { title: "ROLE", field: "role", hozAlign: "left", minWidth: 150 },
+                { title: "EMAIL", field: "email", hozAlign: "left", minWidth: 250 },
+                { title: "INSTANSI", field: "instance", hozAlign: "left", minWidth: 50 },
+                { title: "ROLE", field: "role", hozAlign: "left", minWidth: 100 },
                 {
                     title: "ACTIONS",
                     field: "id",
                     hozAlign: "center",
                     headerSort: false,
-                    width: 120,
+                    width: 150,
                     formatter: function (cell, formatterParams, onRendered) {
                         let id = cell.getValue();
                         return `
@@ -285,7 +279,7 @@ import { min } from "lodash";
                                 <a class="flex items-center mr-3 btn-edit" href="javascript:;" data-id="${id}">
                                     <i data-lucide="check-square" class="w-4 h-4 mr-1"></i> Edit
                                 </a>
-                                <a class="flex items-center text-danger btn-delete" href="javascript:;" data-id="${id}">
+                                <a class="flex items-center btn-delete" href="javascript:;" data-id="${id}">
                                     <i data-lucide="trash-2" class="w-4 h-4 mr-1"></i> Delete
                                 </a>
                             </div>
@@ -384,6 +378,22 @@ import { min } from "lodash";
             $('.text-danger').html('');
         }
 
+        // Function to populate units dropdown
+        async function populateUnits() {
+            try {
+                const response = await axios.get(`/users/instances`);
+                const units = response.data;
+                const unitSelect = document.querySelector('#instance');
+                unitSelect.innerHTML = '<option value="">Pilih Instansi</option>'; // Clear existing options
+                // Gunakan Object.entries untuk looping key dan value
+                Object.entries(units).forEach(([id, name]) => {
+                    unitSelect.add(new Option(name, id)); // Option(text, value)
+                });
+            } catch (error) {
+                console.error('Failed to fetch units:', error);
+            }
+        }
+
         // Function to populate roles dropdown
         async function populateRoles() {
             try {
@@ -405,6 +415,7 @@ import { min } from "lodash";
             $('#user-modal-title').html('Add User');
             $('#password').attr('required', true);
             $('#password-hint').addClass('hidden');
+            populateUnits();
             populateRoles();
             userModal.show();
             // Force re-render of icons after modal is shown, as it can cause a table redraw.
@@ -426,13 +437,17 @@ import { min } from "lodash";
             try {
                 const response = await axios.get(`/users/${userId}`);
                 const user = response.data;
+                console.log('User data:', user);
                 $('#user_id').val(user.id);
                 $('#name').val(user.name);
                 $('#email').val(user.email);
-                $('#unit').val(user.unit);
+
+                await populateUnits(); // Ensure units are loaded before setting value
+                $('#instance').val(user.instance_id);
 
                 await populateRoles(); // Ensure roles are loaded before setting value
                 if (user.roles && user.roles.length > 0) {
+                    console.log('Role:', user.roles[0].name);
                     $('#role').val(user.roles[0].name);
                 }
 

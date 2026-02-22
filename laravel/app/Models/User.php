@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use App\Models\Instance;
 
 class User extends Authenticatable
 {
@@ -22,7 +22,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'unit'
+        'instance_id',
+        'active',
+        'deleted_at'
     ];
 
     /**
@@ -56,12 +58,18 @@ class User extends Authenticatable
      *
      * @var array
      */
-    public function getPhotoUrlAttribute()
+    public function getPhotoAttribute()
     {
         if ($this->foto !== null) {
             return url('media/user/' . $this->id . '/' . $this->foto);
         } else {
             return url('media-example/no-image.png');
         }
+    }
+
+    public function instanceDetails()
+    {
+        // Parameter: Model tujuan, foreign key di User, owner key di Unit
+        return $this->belongsTo(Instance::class, 'instance_id');
     }
 }

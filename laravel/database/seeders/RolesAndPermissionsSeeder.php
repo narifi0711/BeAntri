@@ -60,7 +60,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $superAdmin = User::create([
             'name' => 'Super Admin',
             'email' => 'superadmin@beantri.com',
-            'instance_id' => null,
+            'instance_id' => 1,
             'password' => Hash::make('password'),
             'active' => true,
         ]);
@@ -68,7 +68,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $admin = User::create([
             'name' => 'Admin Instance',
             'email' => 'admin@allora.com',
-            'instance_id' => 1,
+            'instance_id' => 3,
             'password' => Hash::make('password'),
             'active' => true,
         ]);
@@ -76,7 +76,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $user = User::create([
             'name' => 'User Instance',
             'email' => 'user@allora.com',
-            'instance_id' => 1,
+            'instance_id' => 3,
             'password' => Hash::make('password'),
             'active' => true,
         ]);

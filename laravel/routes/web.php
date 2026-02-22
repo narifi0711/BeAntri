@@ -34,13 +34,14 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::controller(UserController::class)->group(function () {
-        Route::get('users', 'index')->name('users')->middleware(['role:super-admin|admin-unit']);
-        Route::get('user/data', 'data')->name('users.data')->middleware(['role:super-admin|admin-unit']);
-        Route::get('users/roles', 'getRoles')->name('users.roles')->middleware(['role:super-admin|admin-unit']);
-        Route::post('users', 'store')->name('users.store')->middleware(['role:super-admin|admin-unit']);
-        Route::get('users/{user}', 'show')->name('users.show')->middleware(['role:super-admin|admin-unit']);
-        Route::put('users/{user}', 'update')->name('users.update')->middleware(['role:super-admin|admin-unit']);
-        Route::delete('users/{user}', 'destroy')->name('users.destroy')->middleware(['role:super-admin|admin-unit']);
+        Route::get('users', 'index')->name('users')->middleware(['role:super-admin|admin-instance']);
+        Route::get('user/data', 'data')->name('users.data')->middleware(['role:super-admin|admin-instance']);
+        Route::get('users/instances', 'getInstances')->name('users.instances')->middleware(['role:super-admin|admin-instance']);
+        Route::get('users/roles', 'getRoles')->name('users.roles')->middleware(['role:super-admin|admin-instance']);
+        Route::post('users', 'store')->name('users.store')->middleware(['role:super-admin|admin-instance']);
+        Route::get('users/{user}', 'show')->name('users.show')->middleware(['role:super-admin|admin-instance']);
+        Route::put('users/{user}', 'update')->name('users.update')->middleware(['role:super-admin|admin-instance']);
+        Route::delete('users/{user}', 'destroy')->name('users.destroy')->middleware(['role:super-admin|admin-instance']);
     });
 
     Route::controller(LogErrorController::class)->group(function () {

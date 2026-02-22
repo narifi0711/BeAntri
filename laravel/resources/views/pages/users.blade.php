@@ -22,7 +22,7 @@
                     <select id="tabulator-html-filter-field" class="form-select w-full 2xl:w-full mt-2 sm:mt-0 sm:w-auto">
                         <option value="name">Name</option>
                         <option value="email">Email</option>
-                        <option value="unit">Unit</option>
+                        <option value="unit">Instansi</option>
                         <option value="role">Role</option>
                     </select>
                 </div>
@@ -114,10 +114,11 @@
                             <div class="text-danger mt-2" id="error-email"></div>
                         </div>
                         <div class="col-span-12">
-                            <label for="unit" class="form-label">Unit</label>
-                            <input id="unit" type="text" name="unit" class="form-control"
-                                placeholder="Unit kerja" required>
-                            <div class="text-danger mt-2" id="error-unit"></div>
+                            <label for="instance" class="form-label">Instansi</label>
+                            <select id="instance" name="instance" class="form-select" required>
+                                <!-- Intsances will be populated by JS -->
+                            </select>
+                            <div class="text-danger mt-2" id="error-instance"></div>
                         </div>
                         <div class="col-span-12">
                             <label for="role" class="form-label">Role</label>

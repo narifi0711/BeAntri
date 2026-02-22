@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Instance;
 
 class UserController extends Controller
 {
@@ -16,9 +18,15 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        $user = Auth::user();
+        if ($user && $user->instance_id) {
+            $user->instanceDetails = Instance::where('id', $user->instance_id)->first();
+        }
+
         return view('pages.users', [
             'title' => 'User Management',
             'layout' => $request->query('layout', 'side-menu'),
+            'user' => $user,
         ]);
     }
 
@@ -27,9 +35,17 @@ class UserController extends Controller
      */
     public function data(Request $request)
     {
+        $user = Auth::user();
+
         // Mengambil semua user dengan relasi roles-nya (Eager Loading)
         // Ini adalah pendekatan yang tepat untuk pagination 'local' di Tabulator.
-        $users = User::with('roles')->get();
+        if ($user->name == "Super Admin") {
+            $users = User::with(['roles', 'instanceDetails'])->get();
+            // $users['unitDetails'] = Unit::where('kode', $user->unit)->first();
+        } else {
+            $users = User::with(['roles', 'instanceDetails'])->where('instance_id', $user->instance_id)->get();
+            // $users['unitDetails'] = Unit::where('kode', $user->unit)->first();
+        }
 
         // Memformat data agar sesuai dengan kolom yang diharapkan oleh Tabulator di frontend.
         $data = $users->map(function ($user) {
@@ -37,7 +53,7 @@ class UserController extends Controller
                 'id'         => $user->id,
                 'name'       => $user->name,
                 'email'      => $user->email,
-                'unit'       => $user->unit,
+                'instance'   => $user->instanceDetails->name,
                 // Mengambil nama role dan menggabungkannya dengan koma jika user memiliki lebih dari satu role.
                 'role'       => $user->roles->pluck('name')->join(', ')
             ];
@@ -56,7 +72,7 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'unit' => 'required|string|max:255',
+            'instance' => 'required|string|max:255',
             'password' => 'required|string|min:8|confirmed',
             'role' => 'required|exists:roles,name',
         ]);
@@ -70,7 +86,7 @@ class UserController extends Controller
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
-                'unit' => $request->unit,
+                'instance_id' => $request->instance,
                 'password' => Hash::make($request->password),
             ]);
 
@@ -89,7 +105,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        $user->load('roles'); // Pastikan role ter-load
+        $user->load(['roles', 'instanceDetails']); // Pastikan role ter-load
         return response()->json($user);
     }
 
@@ -153,5 +169,20 @@ class UserController extends Controller
     {
         $roles = Role::all()->pluck('name');
         return response()->json($roles);
+    }
+
+    /**
+     * Mengambil semua instansi.
+     */
+    public function getInstances()
+    {
+        $user = Auth::user();
+
+        if ($user->name == "Super Admin") {
+            $instances = Instance::all()->pluck('name', 'id');
+        } else {
+            $instances = Instance::where('id', $user->instance_id)->pluck('name', 'id');
+        }
+        return response()->json($instances);
     }
 }

@@ -32,8 +32,9 @@ return new class extends Migration
 
             // Kolom User dan App
             $table->string('user_create', 50)->nullable();
-            $table->timestamp('user_date_create')->nullable(); // Menggunakan timestamp karena kolom SQL adalah DATETIME
             $table->string('user_change', 50)->nullable();
+
+            $table->timestamps();
         });
 
         // 2. Memperbarui Tabel Users (Modifikasi kolom yang sudah ada)

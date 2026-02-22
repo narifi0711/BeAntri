@@ -27,16 +27,39 @@ class InstanceSeeder extends Seeder
         // so we'll assume the table name is 'unit' as defined in CREATE TABLE.
         $instances = [
             [
+                'name' => 'BeAntri',
+                'address' => '0841020 Surabaya',
+                'telp' => null,
+                'email' => 'admin@beantri.com',
+                'website' => 'https://beantri.com',
+                'wa' => '08115159111',
+                'facebook' => null,
+                'instagram' => null,
+                'user_create' => 'superadmin@beantri.com',
+                'user_change' => null
+            ],
+            [
+                'name' => 'EndUser',
+                'address' => null,
+                'telp' => null,
+                'email' => null,
+                'website' => null,
+                'wa' => null,
+                'facebook' => null,
+                'instagram' => null,
+                'user_create' => 'superadmin@beantri.com',
+                'user_change' => null
+            ],
+            [
                 'name' => 'Allora Klinik',
                 'address' => 'Banjarbaru, Kalimantan Selatan',
-                'telp' => '0951 - 321107, 321056, 321054',
-                'email' => 'allora@allora.com',
-                'website' => 'kumar',
-                'wa' => '4649849494',
-                'facebook' => 'https://facebook.com',
-                'instagram' => 'mar kumar taye',
+                'telp' => null,
+                'email' => 'admin@allora.com',
+                'website' => 'https://allora.com',
+                'wa' => '081939792333',
+                'facebook' => null,
+                'instagram' => 'https://www.instagram.com/allora.clinic.aesthetic/',
                 'user_create' => 'superadmin@beantri.com',
-                'user_date_create' => now(),
                 'user_change' => null
             ]
         ];

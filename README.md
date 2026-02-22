@@ -23,7 +23,7 @@ Pada terminal folder laravel:
 9.  Jalankan: php artisan serve
 10. Jalankan: php artisan key:generate
 11. Login super admin =>
-    username: uperadmin@beantri.com
+    username: superadmin@beantri.com
     passowrd: password
     Login admin unit =>
     username: admin@allora.com
